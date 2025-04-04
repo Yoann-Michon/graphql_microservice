@@ -1,0 +1,3 @@
+[submodule "nestjs_utils"]
+	path = nestjs_utils
+	url = git@github.com:Yoann-Michon/nestjs_utils.git

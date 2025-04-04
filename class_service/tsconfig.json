@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@guards/api_key_guard": [
+        "utils/api_key_guard/src"
+      ],
+      "@guards/api_key_guard/*": [
+        "utils/api_key_guard/src/*"
+      ],
+      "@guards/auth_guard": [
+        "utils/auth_guard/src"
+      ],
+      "@guards/auth_guard/*": [
+        "utils/auth_guard/src/*"
+      ],
+      "@guards/roles_guard": [
+        "utils/roles_guard/src"
+      ],
+      "@guards/roles_guard/*": [
+        "utils/roles_guard/src/*"
+      ]
+    }
+  }
+}

@@ -1,0 +1,141 @@
+services:
+  api-gateway:
+    build:
+      context: ./api_gateway
+    ports:
+      - "4000:4000"
+    depends_on:
+      - user-service
+      - class-service
+      - grade-service
+    env_file:
+      - ./api_gateway/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/api/graphql"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    restart: always
+    networks:
+      - backend
+
+  class-service:
+    build:
+      context: ./class_service
+    depends_on:
+      - mariadb-class
+    env_file:
+      - ./class_service/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://class-service:4000/graphql"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    restart: always
+    networks:
+      - backend
+
+  user-service:
+    build:
+      context: ./user_service
+    depends_on:
+      - mariadb-user
+    env_file:
+      - ./user_service/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://user-service:4002/graphql"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    restart: always
+    networks:
+      - backend
+
+  grade-service:
+    build:
+      context: ./grade_service
+    depends_on:
+      - mariadb-grade
+    env_file:
+      - ./grade_service/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://grade-service:4003/graphql"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    restart: always
+    networks:
+      - backend
+
+  mariadb-class:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: class_db
+      MYSQL_USER: class_user
+      MYSQL_PASSWORD: class_password
+    volumes:
+      - mariadb-class-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      timeout: 5s
+    networks:
+      - backend
+
+  mariadb-user:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: user_db
+      MYSQL_USER: user_user
+      MYSQL_PASSWORD: user_password
+    volumes:
+      - mariadb-user-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      timeout: 5s
+    networks:
+      - backend
+
+  mariadb-grade:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: grade_db
+      MYSQL_USER: grade_user
+      MYSQL_PASSWORD: grade_password
+    volumes:
+      - mariadb-grade-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      timeout: 5s
+    networks:
+      - backend
+
+volumes:
+  mariadb-class-data:
+    driver: local
+  mariadb-user-data:
+    driver: local
+  mariadb-grade-data:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge

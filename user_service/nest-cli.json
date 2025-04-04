@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true
+  },
+  "projects": {
+    "api_key_guard": {
+      "type": "library",
+      "root": "libs/api_key_guard",
+      "entryFile": "index",
+      "sourceRoot": "libs/api_key_guard/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/api_key_guard/tsconfig.lib.json"
+      }
+    },
+    "auth_guard": {
+      "type": "library",
+      "root": "libs/auth_guard",
+      "entryFile": "index",
+      "sourceRoot": "libs/auth_guard/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/auth_guard/tsconfig.lib.json"
+      }
+    },
+    "roles_guard": {
+      "type": "library",
+      "root": "libs/roles_guard",
+      "entryFile": "index",
+      "sourceRoot": "libs/roles_guard/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/roles_guard/tsconfig.lib.json"
+      }
+    }
+  }
+}
