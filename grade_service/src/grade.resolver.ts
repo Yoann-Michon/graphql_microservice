@@ -8,9 +8,11 @@ import { UpdateGradeInput } from './dto/update-grade.input';
 import { UseGuards } from '@nestjs/common';
 import { ApiKeyGuardService } from '@guards/api_key_guard/api_key_guard.service';
 import { RolesGuardService } from '@guards/roles_guard/roles_guard.service';
+import { AuthGuardService } from '@guards/auth_guard/auth_guard.service';
+import { Statistics } from './entities/statistics.entity';
 
 @Resolver(() => Grade)
-@UseGuards(ApiKeyGuardService,RolesGuardService)//avoir
+@UseGuards(ApiKeyGuardService,AuthGuardService,RolesGuardService)
 export class GradeResolver {
   constructor(private readonly gradeService: GradeService) {}
 
@@ -50,4 +52,32 @@ export class GradeResolver {
     await this.gradeService.remove(studentId, classId);
     return true;
   }
+
+  @Query(() => [Grade], { name: 'classGrades' })
+  @UseGuards(RolesGuardService)
+  @Roles(Role.PROFESSOR)
+  findAllGradesForClass(
+    @Args('classId') classId: string,
+  ): Promise<Grade[]> {
+    return this.gradeService.findAllGradesForClass(classId);
+  }
+
+  @Query(() => Statistics, { name: 'studentStatistics' })
+  @UseGuards(RolesGuardService)
+  @Roles(Role.PROFESSOR, Role.STUDENT)
+  getStudentStatistics(
+    @Args('studentId') studentId: string,
+  ): Promise<Statistics> {
+    return this.gradeService.getStudentStatistics(studentId);
+  }
+
+  @Query(() => Statistics, { name: 'classStatistics' })
+  @UseGuards(RolesGuardService)
+  @Roles(Role.PROFESSOR)
+  getClassStatistics(
+    @Args('classId') classId: string,
+  ): Promise<Statistics> {
+    return this.gradeService.getClassStatistics(classId);
+  }
+
 }

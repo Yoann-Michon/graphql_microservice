@@ -9,9 +9,10 @@ import { Public } from '@guards/roles_guard/public.decorator';
 import { Roles } from '@guards/roles_guard/roles.decorator';
 import { Role } from '@guards/roles_guard/role.enum';
 import { RolesGuardService } from '@guards/roles_guard/roles_guard.service';
+import { AuthGuardService } from '@guards/auth_guard/auth_guard.service';
 
 @Resolver(() => User)
-@UseGuards(ApiKeyGuardService,RolesGuardService)//avoir
+@UseGuards(ApiKeyGuardService,AuthGuardService,RolesGuardService)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
@@ -57,6 +58,7 @@ export class UserResolver {
     return this.userService.remove(id);
   }
 
+  @Public()
   @Mutation(() => User)
   async verifyPassword(
     @Args('email') email: string,

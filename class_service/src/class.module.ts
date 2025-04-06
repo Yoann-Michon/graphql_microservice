@@ -6,16 +6,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
     ConfigModule.forRoot({ envFilePath: '.env' }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: {
         path: 'schema.gql',
         federation: 2,
-    },
+      },
       playground: true,
       context: ({ req }) => ({ req })
     }),
@@ -36,4 +41,4 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/ap
     })],
   providers: [ClassResolver, ClassService],
 })
-export class ClassModule {}
+export class ClassModule { }

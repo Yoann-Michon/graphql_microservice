@@ -9,19 +9,24 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/ap
 import { ApiKeyGuardModule } from '@guards/api_key_guard/api_key_guard.module';
 import { RolesGuardModule } from '@guards/roles_guard/roles_guard.module';
 import { AuthGuardModule } from '@guards/auth_guard/auth_guard.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
     ConfigModule.forRoot({ envFilePath: '.env' }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
-          driver: ApolloFederationDriver,
-          autoSchemaFile: {
-            path: 'schema.gql',
-            federation: 2,
-        },
-          playground: true,
-          context: ({ req }) => ({ req })
-        }),
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        path: 'schema.gql',
+        federation: 2,
+      },
+      playground: true,
+      context: ({ req }) => ({ req })
+    }),
     TypeOrmModule.forFeature([Grade]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -42,4 +47,4 @@ import { AuthGuardModule } from '@guards/auth_guard/auth_guard.module';
     AuthGuardModule,],
   providers: [GradeResolver, GradeService],
 })
-export class GradeModule {}
+export class GradeModule { }

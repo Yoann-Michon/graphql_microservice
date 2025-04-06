@@ -9,16 +9,21 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/ap
 import { ApiKeyGuardModule } from '@guards/api_key_guard/api_key_guard.module';
 import { RolesGuardModule } from '@guards/roles_guard/roles_guard.module';
 import { AuthGuardModule } from '@guards/auth_guard/auth_guard.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
     ConfigModule.forRoot({ envFilePath: '.env' }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: {
         path: 'schema.gql',
         federation: 2,
-    },
+      },
       playground: true,
       context: ({ req }) => ({ req })
     }),
@@ -38,8 +43,8 @@ import { AuthGuardModule } from '@guards/auth_guard/auth_guard.module';
       }),
     }),
     ApiKeyGuardModule,
-    RolesGuardModule,
     AuthGuardModule,
+    RolesGuardModule,
   ],
   providers: [UserResolver, UserService],
 })

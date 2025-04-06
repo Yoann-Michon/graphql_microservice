@@ -33,7 +33,6 @@ export class AuthService {
     });
 
     const { data, errors } = await response.json();
-    log('Response from user service:', data, errors);
     if (errors || !data?.createUser) {
       throw new Error('User registration failed');
     }
@@ -66,7 +65,7 @@ export class AuthService {
     });
 
     const { data, errors } = await response.json();
-
+    log("data: ", data, errors);
     if (errors || !data?.verifyPassword) {
       throw new UnauthorizedException('Invalid credentials');
     }

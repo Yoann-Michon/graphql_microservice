@@ -8,9 +8,10 @@ import { ApiKeyGuardService } from '@guards/api_key_guard/api_key_guard.service'
 import { Roles } from '@guards/roles_guard/roles.decorator';
 import { Role } from '@guards/roles_guard/role.enum';
 import { RolesGuardService } from '@guards/roles_guard/roles_guard.service';
+import { AuthGuardService } from '@guards/auth_guard/auth_guard.service';
 
 @Resolver(() => Class)
-@UseGuards(ApiKeyGuardService,RolesGuardService)//avoir
+@UseGuards(ApiKeyGuardService,AuthGuardService,RolesGuardService)
 export class ClassResolver {
   constructor(private readonly classService: ClassService) { }
 
@@ -27,7 +28,7 @@ export class ClassResolver {
   }
 
   @Roles(Role.PROFESSOR, Role.STUDENT)
-  @Query(() => Class, { name: 'class' })
+  @Query(() => Class, { name: 'classById' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.classService.findOne(id);
   }

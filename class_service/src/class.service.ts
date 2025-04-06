@@ -67,15 +67,21 @@ export class ClassService {
   async remove(id: string) {
     try {
       const existingClass = await this.findOne(id);
+  
       if (!existingClass) {
         throw new NotFoundException('Class not found');
       }
+  
+      if (existingClass.studentIds && existingClass.studentIds.length > 0) {
+        throw new NotFoundException('Class cannot be deleted because it contains students');
+      }
+  
       return await this.classRepository.delete({ id });
     } catch (error) {
       throw new InternalServerErrorException(`Error deleting class: ${error.message}`);
     }
   }
-
+  
   private async fetchUsersByIds(ids: string[]): Promise<Record<string, boolean>> {
     const query = `
       query ($ids: [String!]!) {
