@@ -15,9 +15,10 @@ const logger = new Logger('ApolloGateway');
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
           subgraphs: [
+            { name: 'auth', url: 'http://auth-service:4001/graphql' },
             { name: 'user', url: 'http://user-service:4002/graphql' },
             { name: 'grade', url: 'http://grade-service:4003/graphql' },
-            //{ name: 'class', url: 'http://class-service:4004/graphql' },
+            { name: 'class', url: 'http://class-service:4004/graphql' },
           ],
         }),
         buildService({ url }) {

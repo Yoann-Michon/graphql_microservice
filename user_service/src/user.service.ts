@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Role } from '@guards/roles_guard/role.enum';
+import { log } from 'console';
 
 @Injectable()
 export class UserService {
@@ -22,12 +23,16 @@ export class UserService {
       }
       const hashedPassword = await bcrypt.hash(createUserInput.password, Number(process.env.SALT));
 
+      log("--------------------------------------")
       const newUser = new User();
       newUser.firstname = createUserInput.firstname;
       newUser.lastname = createUserInput.lastname;
       newUser.email = createUserInput.email;
       newUser.password = hashedPassword;
+      newUser.pseudo = `${createUserInput.firstname} ${createUserInput.lastname}`;
+      newUser.role = createUserInput.role ?? Role.STUDENT;
 
+      log('New user created:', newUser);
       return await this.usersRepository.save(newUser);
     } catch (error) {
       throw new InternalServerErrorException(`Error creating user: ${error.message}`);
@@ -95,15 +100,15 @@ export class UserService {
     }
   }
 
-  async validateUser(updateUserInput: UpdateUserInput): Promise<User | null> {
+  async validateUser(email:string, password:string): Promise<User | null> {
     try {
-      const user = await this.findOneByEmail(updateUserInput.email!);
+      const user = await this.findOneByEmail(email);
 
       if (!user) {
         return null;
       }
 
-      const isPasswordValid = await bcrypt.compare(updateUserInput.password!, user.password);
+      const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
         return null;
@@ -112,6 +117,20 @@ export class UserService {
       return user;
     } catch (error) {
       throw new InternalServerErrorException(`Error validating user: ${error.message}`);
+    }
+  }
+
+  async changeUserRole(userId: string, role: Role): Promise<User> {
+    try {
+      const user = await this.findOneById(userId);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      
+      user.role = role;
+      return await this.usersRepository.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException(`Error changing user role: ${error.message}`);
     }
   }
 }

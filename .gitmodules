@@ -1,0 +1,12 @@
+[submodule "user_service/utils"]
+	path = user_service/utils
+	url = git@github.com:Yoann-Michon/utils.git
+[submodule "grade_service/utils"]
+	path = grade_service/utils
+	url = git@github.com:Yoann-Michon/utils.git
+[submodule "auth_service/utils"]
+	path = auth_service/utils
+	url = git@github.com:Yoann-Michon/utils.git
+[submodule "api_gateway/utils"]
+	path = api_gateway/utils
+	url = git@github.com:Yoann-Michon/utils.git

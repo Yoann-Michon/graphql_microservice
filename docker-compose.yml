@@ -8,6 +8,7 @@ services:
       - user-service
       - class-service
       - grade-service
+      - auth-service
     env_file:
       - ./api_gateway/.env
     healthcheck:
@@ -63,6 +64,23 @@ services:
       - ./grade_service/.env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://grade-service:4003/graphql"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    restart: always
+    networks:
+      - backend
+
+  auth-service:
+    build:
+      context: ./auth_service
+    depends_on:
+      - user-service
+    env_file:
+      - ./auth_service/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://auth-service:4001/graphql"]
       interval: 30s
       retries: 3
       start_period: 10s

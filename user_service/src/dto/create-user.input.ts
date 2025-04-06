@@ -27,8 +27,12 @@ export class CreateUserInput {
   @Matches(/.*[!@#$%^&*].*/, { message: 'Password must contain at least one special character (!@#$%^&*)' })
   password: string;
 
-  @Field(() => Role,{ description: 'User role (default: STUDENT)' })
+  @Field(() => Role,{ description: 'User role (default: STUDENT)', nullable: true })
   @IsOptional()
   @IsEnum(Role, { message: 'Role must be one of the following: STUDENT, PROFESSOR' })
   role?: Role;
+
+  @Field(()=>String,{ description: 'User pseudo', nullable: true })
+  @IsOptional()
+  pseudo: string;
 }

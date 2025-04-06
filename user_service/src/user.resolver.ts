@@ -8,9 +8,10 @@ import { ApiKeyGuardService } from '@guards/api_key_guard/api_key_guard.service'
 import { Public } from '@guards/roles_guard/public.decorator';
 import { Roles } from '@guards/roles_guard/roles.decorator';
 import { Role } from '@guards/roles_guard/role.enum';
+import { RolesGuardService } from '@guards/roles_guard/roles_guard.service';
 
 @Resolver(() => User)
-@UseGuards(ApiKeyGuardService)
+@UseGuards(ApiKeyGuardService,RolesGuardService)//avoir
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
@@ -21,13 +22,13 @@ export class UserResolver {
   }
 
   @Roles(Role.PROFESSOR)
-  @Query(() => [User], { name: 'user' })
+  @Query(() => [User], { name: 'users' })
   findAll() {
     return this.userService.findAll();
   }
 
   @Roles(Role.PROFESSOR,Role.STUDENT)
-  @Query(() => User, { name: 'user' })
+  @Query(() => User, { name: 'userById' })
   findOneById(@Args('id', { type: () => String }) id: string) {
     return this.userService.findOneById(id);
   }
@@ -39,7 +40,7 @@ export class UserResolver {
   }
   
   @Roles(Role.PROFESSOR,Role.STUDENT)
-  @Query(() => User, { name: 'user' })
+  @Query(() => User, { name: 'userByEmail' })
   findOneByEmail(@Args('email', { type: () => String }) email: string) {
     return this.userService.findOneByEmail(email);
   }
@@ -55,4 +56,25 @@ export class UserResolver {
   removeUser(@Args('id', { type: () => String }) id: string) {
     return this.userService.remove(id);
   }
+
+  @Mutation(() => User)
+  async verifyPassword(
+    @Args('email') email: string,
+    @Args('password') password: string,
+  ): Promise<User> {
+    const user = await this.userService.validateUser(email, password);
+    if (!user) {
+      throw new Error('Invalid email or password');
+    }
+    return user;
+  }
+
+  @Mutation(() => User)
+@Roles(Role.PROFESSOR)
+changeUserRole(
+  @Args('userId', { type: () => String }) userId: string,
+  @Args('role', { type: () => Role }) role: Role
+) {
+  return this.userService.changeUserRole(userId, role);
+}
 }

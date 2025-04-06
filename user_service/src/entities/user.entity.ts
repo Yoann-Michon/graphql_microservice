@@ -20,6 +20,10 @@ export class User {
   @Column({ nullable: false })
   @Field(()=>String,{ description: 'User last name' })
   lastname: string;
+  
+  @Column()
+  @Field(()=>String,{ description: 'User pseudo' })
+  pseudo: string;
 
   @Column({ nullable: false })
   password: string;

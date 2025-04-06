@@ -7,9 +7,10 @@ import { CreateGradeInput } from './dto/create-grade.input';
 import { UpdateGradeInput } from './dto/update-grade.input';
 import { UseGuards } from '@nestjs/common';
 import { ApiKeyGuardService } from '@guards/api_key_guard/api_key_guard.service';
+import { RolesGuardService } from '@guards/roles_guard/roles_guard.service';
 
 @Resolver(() => Grade)
-@UseGuards(ApiKeyGuardService)
+@UseGuards(ApiKeyGuardService,RolesGuardService)//avoir
 export class GradeResolver {
   constructor(private readonly gradeService: GradeService) {}
 
