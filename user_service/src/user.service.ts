@@ -35,6 +35,9 @@ export class UserService {
       log('New user created:', newUser);
       return await this.usersRepository.save(newUser);
     } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error creating user: ${error.message}`);
     }
   }
@@ -84,6 +87,9 @@ export class UserService {
       };
       return await this.usersRepository.save(updatedUser);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error; 
+      }
       throw new InternalServerErrorException(`Error updating user: ${error.message}`);
     }
   }
@@ -96,6 +102,9 @@ export class UserService {
       }
       return await this.usersRepository.delete({ id });
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error deleting user: ${error.message}`);
     }
   }
@@ -130,6 +139,9 @@ export class UserService {
       user.role = role;
       return await this.usersRepository.save(user);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error changing user role: ${error.message}`);
     }
   }

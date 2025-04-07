@@ -17,6 +17,9 @@ export class GradeService {
       const grade = this.gradeRepository.create(createGradeInput);
       return await this.gradeRepository.save(grade);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error creating grade: ${error.message}`);
     }
   }
@@ -46,6 +49,9 @@ export class GradeService {
       grade.grade = updateGradeInput.grade ?? grade.grade;
       return await this.gradeRepository.save(grade);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error updating grade: ${error.message}`);
     }
   }
@@ -58,6 +64,9 @@ export class GradeService {
       }
       await this.gradeRepository.remove(grade);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error deleting grade: ${error.message}`);
     }
   }
@@ -81,6 +90,9 @@ export class GradeService {
       const gradeValues = grades.map(g => g.grade);
       return this.calculateStatistics(gradeValues);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error calculating student statistics: ${error.message}`);
     }
   }
@@ -101,6 +113,9 @@ export class GradeService {
       
       return stats;
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error calculating class statistics: ${error.message}`);
     }
   }

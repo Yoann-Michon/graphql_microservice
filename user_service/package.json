@@ -86,13 +86,12 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/libs/"
+      "<rootDir>/src/"
     ],
     "moduleNameMapper": {
-      "^@guards/api_key_guard(|/.*)$": "<rootDir>/libs/api_key_guard/src/$1",
-      "^@guards/auth_guard(|/.*)$": "<rootDir>/libs/auth_guard/src/$1",
-      "^@guards/roles_guard(|/.*)$": "<rootDir>/libs/roles_guard/src/$1"
+      "^@guards/api_key_guard(|/.*)$": "<rootDir>/utils/api_key_guard/src/$1",
+      "^@guards/auth_guard(|/.*)$": "<rootDir>/utils/auth_guard/src/$1",
+      "^@guards/roles_guard(|/.*)$": "<rootDir>/utils/roles_guard/src/$1"
     }
   }
 }

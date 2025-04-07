@@ -60,6 +60,9 @@ export class ClassService {
       };
       return await this.classRepository.save(updatedUser);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error updating class: ${error.message}`);
     }
   }
@@ -78,6 +81,9 @@ export class ClassService {
   
       return await this.classRepository.delete({ id });
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error deleting class: ${error.message}`);
     }
   }
@@ -137,6 +143,9 @@ export class ClassService {
 
       return await this.classRepository.save(existingClass);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error adding students to class: ${error.message}`);
     }
   }
@@ -152,6 +161,9 @@ export class ClassService {
 
       return await this.classRepository.save(existingClass);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(`Error removing students from class: ${error.message}`);
     }
   }
