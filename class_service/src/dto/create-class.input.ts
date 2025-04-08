@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsArray, IsString, ArrayNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsArray, IsString, ArrayNotEmpty, IsOptional } from 'class-validator';
 
 @InputType()
 export class CreateClassInput {
@@ -16,7 +16,7 @@ export class CreateClassInput {
 
   @Field(() => [String], { description: 'List of student IDs for this class' })
   @IsArray({ message: 'Student IDs must be an array' })
-  @ArrayNotEmpty({ message: 'At least one student ID must be provided' })
+  @IsOptional()
   @IsString({ each: true, message: 'Each student ID must be a string' })
   studentIds: string[];
 }

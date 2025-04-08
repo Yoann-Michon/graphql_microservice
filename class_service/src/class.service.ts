@@ -12,22 +12,22 @@ export class ClassService {
 
   async create(createClassInput: CreateClassInput) {
     const { professorId, studentIds, name } = createClassInput;
-    const allUserIds = [professorId, ...studentIds];
-    const usersExistence = await this.fetchUsersByIds(allUserIds);
+    //const allUserIds = [professorId, ...studentIds];
+    //const usersExistence = await this.fetchUsersByIds(allUserIds);
 
-    if (!usersExistence[professorId]) {
-      throw new NotFoundException(`Professor with ID ${professorId} not found`);
-    }
-
-    const missingStudents = studentIds.filter(id => !usersExistence[id]);
-    if (missingStudents.length > 0) {
-      throw new NotFoundException(`Students not found: ${missingStudents.join(', ')}`);
-    }
+    //if (!usersExistence[professorId]) {
+    //  throw new NotFoundException(`Professor with ID ${professorId} not found`);
+    //}
+//
+    //const missingStudents = studentIds.filter(id => !usersExistence[id]);
+    //if (missingStudents.length > 0) {
+    //  throw new NotFoundException(`Students not found: ${missingStudents.join(', ')}`);
+    //}
 
     const newClass = new Class();
     newClass.name = name;
     newClass.professorId = professorId;
-    newClass.studentIds = studentIds;
+    newClass.studentIds = studentIds??[];
 
     return this.classRepository.save(newClass);
   }
