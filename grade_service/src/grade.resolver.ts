@@ -10,6 +10,7 @@ import { ApiKeyGuardService } from '@guards/api_key_guard/api_key_guard.service'
 import { RolesGuardService } from '@guards/roles_guard/roles_guard.service';
 import { AuthGuardService } from '@guards/auth_guard/auth_guard.service';
 import { Statistics } from './entities/statistics.entity';
+import { Public } from '@guards/roles_guard/public.decorator';
 
 @Resolver(() => Grade)
 @UseGuards(ApiKeyGuardService,AuthGuardService,RolesGuardService)
@@ -23,11 +24,12 @@ export class GradeResolver {
   }
 
   @Query(() => [Grade], { name: 'gradesForStudent' })
-  @Roles(Role.PROFESSOR, Role.STUDENT)
+  @Public()
   findAllGradesForStudent(@Args('studentId', { type: () => String }) studentId: string) {
     return this.gradeService.findAllGradesForStudent(studentId);
   }
 
+  @Public()
   @Query(() => Grade, { name: 'gradeForStudentInClass' })
   @Roles(Role.PROFESSOR, Role.STUDENT)
   findGradeForStudentInClass(
@@ -55,7 +57,7 @@ export class GradeResolver {
 
   @Query(() => [Grade], { name: 'classGrades' })
   @UseGuards(RolesGuardService)
-  @Roles(Role.PROFESSOR)
+  @Public()
   findAllGradesForClass(
     @Args('classId') classId: string,
   ): Promise<Grade[]> {

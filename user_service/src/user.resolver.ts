@@ -22,25 +22,25 @@ export class UserResolver {
     return this.userService.create(createUserInput);
   }
 
-  @Roles(Role.PROFESSOR)
+  @Public()
   @Query(() => [User], { name: 'users' })
   findAll() {
     return this.userService.findAll();
   }
 
-  @Roles(Role.PROFESSOR,Role.STUDENT)
+  @Public()
   @Query(() => User, { name: 'userById' })
   findOneById(@Args('id', { type: () => String }) id: string) {
     return this.userService.findOneById(id);
   }
   
-  @Roles(Role.PROFESSOR, Role.STUDENT)
+  @Public()
   @Query(() => [User], { name: 'usersByIds' })
   findUsersByIds(@Args('ids', { type: () => [String] }) ids: string[]) {
     return this.userService.findUsersByIds(ids);
   }
   
-  @Roles(Role.PROFESSOR,Role.STUDENT)
+  @Public()
   @Query(() => User, { name: 'userByEmail' })
   findOneByEmail(@Args('email', { type: () => String }) email: string) {
     return this.userService.findOneByEmail(email);

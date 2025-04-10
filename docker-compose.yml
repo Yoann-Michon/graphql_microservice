@@ -1,4 +1,14 @@
 services:
+  front-end:
+    build:
+      context: ./front
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api-gateway
+    env_file:
+      - ./front/.env
+      
   api-gateway:
     build:
       context: ./api_gateway
@@ -12,7 +22,7 @@ services:
     env_file:
       - ./api_gateway/.env
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4000/api/graphql"]
+      test: ["CMD", "curl", "-f", "http://localhost:4000/graphql"]
       interval: 30s
       retries: 3
       start_period: 10s
@@ -29,7 +39,7 @@ services:
     env_file:
       - ./class_service/.env
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://class-service:4000/graphql"]
+      test: ["CMD", "curl", "-f", "http://class-service:4004/graphql"]
       interval: 30s
       retries: 3
       start_period: 10s

@@ -9,6 +9,7 @@ import { Roles } from '@guards/roles_guard/roles.decorator';
 import { Role } from '@guards/roles_guard/role.enum';
 import { RolesGuardService } from '@guards/roles_guard/roles_guard.service';
 import { AuthGuardService } from '@guards/auth_guard/auth_guard.service';
+import { Public } from '@guards/roles_guard/public.decorator';
 
 @Resolver(() => Class)
 @UseGuards(ApiKeyGuardService,AuthGuardService,RolesGuardService)
@@ -21,13 +22,13 @@ export class ClassResolver {
     return this.classService.create(createClassInput);
   }
 
-  @Roles(Role.PROFESSOR, Role.STUDENT)
+  @Public()
   @Query(() => [Class], { name: 'class' })
   findAll() {
     return this.classService.findAll();
   }
 
-  @Roles(Role.PROFESSOR, Role.STUDENT)
+  @Public()
   @Query(() => Class, { name: 'classById' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.classService.findOne(id);
@@ -64,13 +65,13 @@ export class ClassResolver {
   }
 
   @Query(() => [Class], { name: 'classesByProfessor' })
-  @Roles(Role.PROFESSOR, Role.STUDENT)
+  @Public()
   findClassesByProfessor(@Args('professorId', { type: () => String }) professorId: string) {
     return this.classService.findClassesByProfessor(professorId);
   }
 
   @Query(() => [Class], { name: 'classesByStudent' })
-  @Roles(Role.PROFESSOR, Role.STUDENT)
+  @Public()
   findClassesByStudent(@Args('studentId', { type: () => String }) studentId: string) {
     return this.classService.findClassesByStudent(studentId);
   }
